@@ -37,7 +37,7 @@ void backgroundLearning(VideoCapture& cap, Ptr<BackgroundSubtractor>& mog, int n
  * and generate a Threshold (in @mogThresold) with only the moving element
  * @mog trained statistical backgroundSubtractor
  */
-void backgroundSubtractor(Mat& frame, Mat& mogThresold, Ptr<BackgroundSubtractor>& mog){
+void backgroundSubtractor(Mat& frame, Mat& mogThreshold, Ptr<BackgroundSubtractor>& mog){
 
   mog->apply(frame, mogThresold, 0);
 
@@ -46,16 +46,36 @@ void backgroundSubtractor(Mat& frame, Mat& mogThresold, Ptr<BackgroundSubtractor
 
   dilate(mogThresold, mogThresold, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
   erode(mogThresold, mogThresold, getStructuringElement(MORPH_ELLIPSE, Size(10, 10)));
+}
 
-  std::vector<std::vector<cv::Point> > contours;
+Mat detectColor(Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar color){
 
-  Mat contourImage(mogThresold.size(), CV_8UC3, cv::Scalar(0,0,0));
-  findContours( mogThresold, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
-  for (size_t idx = 0; idx < contours.size(); idx++) {
+  Mat threshold;
+  Mat imgHSV;
+  Mat imgArea = Mat::zeros(frame.size(), CV_8UC3);
+  std::vector<std::vector<Point> > contours;
+  std::vector<Vec4i> hierarchy;
 
-        if(arcLength(contours[idx], true) >= 100)
-          drawContours(contourImage, contours, idx, Scalar(255, 0, 0), -1);
-    }
+  // Conversion de l'image en RGB en image en BVH
+  cvtColor(frame, imgHSV, COLOR_BGR2HSV);
 
-  imshow("contourImage", contourImage);
+  // Création du threshold de l'image en fonction du seuil donné en paramètre
+  inRange(imgHSV, lowerHSV, upperHSV, threshold);
+
+  //imshow("HSV", imgHSV);
+
+  // Ouverture pour éliminer les petite imperfections de l'image binaire
+  erode(threshold, threshold, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+  dilate( threshold, threshold, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+  // Fermeture Pour remplir les petits trous dans l'image binaire
+  dilate( threshold, threshold, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+  erode(threshold, threshold, getStructuringElement(MORPH_ELLIPSE, Size(5, 5)) );
+
+  findContours(threshold, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+  for( int i = 0; i< contours.size(); i++ )
+   {
+     drawContours(imgArea, contours, i, color, -1, 4, hierarchy, 0, Point());
+   }
+
+   return imgArea;
 }

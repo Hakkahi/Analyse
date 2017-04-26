@@ -11,6 +11,9 @@
 using namespace cv;
 
 void backgroundLearning(VideoCapture& cap, Ptr<BackgroundSubtractor>& mog, int nbFrame);
-void backgroundSubtractor(Mat& frame, Mat& mogThresold, Ptr<BackgroundSubtractor>& mog);
+void backgroundSubtractor(Mat& frame, Mat& mogThreshold, Ptr<BackgroundSubtractor>& mog);
+Mat detectColor(Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar color);
+
+
 
 #endif
