@@ -27,8 +27,6 @@ void backgroundLearning(VideoCapture& cap, Ptr<BackgroundSubtractor>& mog, int n
     mog->apply(frame, mogFrame);
   }
 
-  system("canberra-gtk-play -f Data/beep.wav");
-
   std::cout << "Fond appris, vous pouvez y aller !" << std::endl;
 }
 
@@ -77,7 +75,7 @@ Mat detectColor(Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar color){
   double dArea = oMoments.m00;
 
   // if the area <= 10000, I consider that the there are no object in the image and it's because of the noise, the area is not zero
-  if (dArea > 10000)
+  if (dArea > 100000)
   {
    //calculate the position of the ball
    int posX = dM10 / dArea;

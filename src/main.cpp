@@ -1,7 +1,6 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/bgsegm.hpp"
 #include "opencv2/video.hpp"
-#include "opencv2/xphoto/white_balance.hpp"
 #include <iostream>
 #include <vector>
 #include <tuple>
@@ -14,7 +13,7 @@ using namespace cv;
 
 int main(int argc, char ** argv){
 
-  VideoCapture cap(1);
+  VideoCapture cap("Data/out.avi");
 
   double fps = cap.get(CV_CAP_PROP_FPS);
   int wait = 1000 / fps;
@@ -34,16 +33,14 @@ int main(int argc, char ** argv){
 
   backgroundLearning(cap, mog, 300);
   std::vector<std::tuple<Scalar, Scalar, Scalar>> colorsToDetect;
-  //red1
-  /*colorsToDetect.push_back(std::make_tuple(Scalar(165, 10, 60), Scalar(179, 255, 255), Scalar(0, 0, 255)));
-  //red2
-  colorsToDetect.push_back(std::make_tuple(Scalar(0, 70, 50), Scalar(3, 230, 230), Scalar(0, 0, 255)));
+  //red
+  colorsToDetect.push_back(std::make_tuple(Scalar(170, 30, 15), Scalar(179, 255, 255), Scalar(0, 0, 255)));
   //blue
-  colorsToDetect.push_back(std::make_tuple(Scalar(90, 90, 50), Scalar(130, 255, 255), Scalar(255, 0, 0)));
+  /*colorsToDetect.push_back(std::make_tuple(Scalar(90, 90, 50), Scalar(130, 255, 255), Scalar(255, 0, 0)));
   //green
   colorsToDetect.push_back(std::make_tuple(Scalar(42, 20, 20), Scalar(89, 255, 240), Scalar(0, 255, 0)));*/
   //yellow
-  colorsToDetect.push_back(std::make_tuple(Scalar(15, 140, 70), Scalar(40, 255, 255), Scalar(0, 255, 255)));
+  //colorsToDetect.push_back(std::make_tuple(Scalar(15, 140, 70), Scalar(40, 255, 255), Scalar(0, 255, 255)));
 
   while(1)
   {
