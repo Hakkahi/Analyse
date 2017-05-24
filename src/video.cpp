@@ -12,7 +12,7 @@ using namespace std;
  int main( int argc, char** argv )
  {
  
-   VideoCapture vcap(1);
+   VideoCapture vcap(0);
  
       if(!vcap.isOpened()){
              cout << "Error opening video stream or file" << endl;
