@@ -30,15 +30,19 @@ private:
 
 std::vector<std::pair<int, int>> iLasts;
 std::vector<timer> timers;
+std::vector<timer> lastActionTimers;
+std::vector<bool> lastActionBooleans;
 
 void initutils(int v){
   for (int i = 0; i < v; ++i)
   {
     iLasts.push_back(std::make_pair(-1, -1));
-  timer t;
-  std::this_thread::sleep_for(std::chrono::seconds(1));
-  std::cout << "passed : " << t.getTimePassed() << std::endl;
-  timers.push_back(t);
+    timer t;
+    timer lt;
+    bool b = false;
+    timers.push_back(t);
+    lastActionTimers.push_back(lt);
+    lastActionBooleans.push_back(b);
   }
   
 }
@@ -132,11 +136,24 @@ Mat detectColor(int id, Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar col
         //time_t ttime;
         //time(&ttime);
         long difft = timers[id].getTimePassed();
+        
         //std::cout << "MOUVEMENT MOTHERFUCKER !!!!!!!  " << message << ", in " << difft << std::endl;
         Vec2i tor = Point(posX, posY) - Point(iLasts[id].first, iLasts[id].second);
         if (difft > 20 && difft < 1200)
         {
+          if (lastActionBooleans[id])
+          {
+            long lastdifft = lastActionTimers[id].getTimePassed();
+            if (lastdifft > 3000)
+            {
+              lastActionBooleans[id] = false;
+              lastActionTimers[id].restart();
+            }
+          }else {
+            lastActionBooleans[id] = true;
+          }
           bool top, right;
+
           std::cout << message << " vector : " << tor << std::endl;
           if (tor[1] > 0)
           {
@@ -148,12 +165,20 @@ Mat detectColor(int id, Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar col
             right = false;
           }
           else right = true;
-          if (message == "red")
+
+          if (lastActionBooleans[id] ==false)
           {
-            triggerAction(0, top, right);
+            if (message == "red")
+            {
+              triggerAction(0, top, right);
+            }
+            else triggerAction(1, top, right);
           }
-          else triggerAction(1, top, right);
-        }
+          
+
+          
+          
+        }else lastActionTimers[id].restart();
         //timers[id] = ttime;
         
       }
