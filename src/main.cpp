@@ -33,15 +33,15 @@ int main(int argc, char ** argv){
 
   backgroundLearning(cap, mog, 300);
   std::vector<std::tuple<Scalar, Scalar, Scalar, std::string>> colorsToDetect;
-  //red
+  //red - right hand
   colorsToDetect.push_back(std::make_tuple(Scalar(150, 70, 150), Scalar(180, 255, 255), Scalar(0, 0, 255), "red"));
   colorsToDetect.push_back(std::make_tuple(Scalar(0, 130, 150), Scalar(10, 255, 255), Scalar(0, 0, 255), "red"));
 
   //blue
-  colorsToDetect.push_back(std::make_tuple(Scalar(90, 90, 50), Scalar(130, 255, 255), Scalar(255, 0, 0), "blue"));
+  //colorsToDetect.push_back(std::make_tuple(Scalar(90, 90, 50), Scalar(130, 255, 255), Scalar(255, 0, 0), "blue"));
   //green
   //colorsToDetect.push_back(std::make_tuple(Scalar(42, 50, 50), Scalar(89, 255, 240), Scalar(0, 255, 0), "green"));
-  //yellow
+  //yellow - left hand
   colorsToDetect.push_back(std::make_tuple(Scalar(15, 100, 70), Scalar(40, 255, 255), Scalar(0, 255, 255), "yellow"));
   initutils(colorsToDetect.size()-1);
 

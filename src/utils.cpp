@@ -128,15 +128,31 @@ Mat detectColor(int id, Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar col
       double res = norm(Point(iLasts[id].first, iLasts[id].second) - Point(posX, posY));
       //std::cout << "DISTANCE : " << res << std::endl;
       
-      if(res >= 40){
+      if(res >= 38){
         //time_t ttime;
         //time(&ttime);
         long difft = timers[id].getTimePassed();
-        std::cout << "MOUVEMENT MOTHERFUCKER !!!!!!!  " << message << ", in " << difft << std::endl;
+        //std::cout << "MOUVEMENT MOTHERFUCKER !!!!!!!  " << message << ", in " << difft << std::endl;
         Vec2i tor = Point(posX, posY) - Point(iLasts[id].first, iLasts[id].second);
         if (difft > 20 && difft < 1200)
         {
-          std::cout << "vector : " << tor << std::endl;
+          bool top, right;
+          std::cout << message << " vector : " << tor << std::endl;
+          if (tor[1] > 0)
+          {
+            top = false;
+          }
+          else top =true;
+          if (tor[0] > 0)
+          {
+            right = false;
+          }
+          else right = true;
+          if (message == "red")
+          {
+            triggerAction(0, top, right);
+          }
+          else triggerAction(1, top, right);
         }
         //timers[id] = ttime;
         
@@ -156,4 +172,25 @@ Mat detectColor(int id, Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar col
 }
 
 
+void triggerAction(int hand, bool top, bool right){
+  //right hand
+  if (hand == 0)
+  {
+    std::cout << "Right hand moving ";
+  }
+  //left hand
+  else{
+    std::cout << "Left hand moving ";
+  }
 
+
+  if (top)
+  {
+    std::cout << "to top ";
+  }else std::cout << "to bottom ";
+  if (right)
+  {
+    std::cout << "right.";
+  }else std::cout << "left.";
+  std::cout << std::endl;
+}
