@@ -177,6 +177,7 @@ void triggerAction(int hand, bool top, bool right){
   if (hand == 0)
   {
     std::cout << "Right hand moving ";
+    triggerKeyboard();
   }
   //left hand
   else{
@@ -193,4 +194,26 @@ void triggerAction(int hand, bool top, bool right){
     std::cout << "right.";
   }else std::cout << "left.";
   std::cout << std::endl;
+}
+
+void triggerKeyboard(){
+
+    int fd = 0;
+    char const *device = "/dev/input/event0"; // cat /proc/bus/input/devices
+    if( (fd = open(device, O_RDWR)) > 0 )
+    {
+        struct input_event event;
+
+        // Press a key (stuff the keyboard with a keypress)
+        event.type = EV_KEY;
+        event.value = EV_PRESSED;
+        event.code = KEY_B;
+        write(fd, &event, sizeof(struct input_event));
+
+        // Release the key
+        event.value = EV_RELEASED;
+        event.code = KEY_B;
+        write(fd, &event, sizeof(struct input_event));
+        close(fd);
+    }
 }
