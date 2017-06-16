@@ -144,7 +144,7 @@ Mat detectColor(int id, Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar col
           if (lastActionBooleans[id])
           {
             long lastdifft = lastActionTimers[id].getTimePassed();
-            if (lastdifft > 3000)
+            if (lastdifft > 2000)
             {
               lastActionBooleans[id] = false;
               lastActionTimers[id].restart();
@@ -154,7 +154,7 @@ Mat detectColor(int id, Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar col
           }
           bool top, right;
 
-          std::cout << message << " vector : " << tor << std::endl;
+          //std::cout << message << " vector : " << tor << std::endl;
           if (tor[1] > 0)
           {
             top = false;
@@ -172,7 +172,7 @@ Mat detectColor(int id, Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar col
             {
               triggerAction(0, top, right);
             }
-            else triggerAction(1, top, right);
+            else triggerAction(1, top, right);    
           }
           
 
@@ -202,42 +202,88 @@ void triggerAction(int hand, bool top, bool right){
   if (hand == 0)
   {
     std::cout << "Right hand moving ";
-    triggerKeyboard();
+
+    if (top){
+        std::cout << "to top ";
+        if (right){
+            std::cout << "right.";
+            triggerKeyboard(1);
+        }
+        else{
+            std::cout << "left.";
+        }
+    }
+    else{
+        std::cout << "to bottom ";
+        if (right){
+            std::cout << "right.";
+        }
+        else{
+            std::cout << "left.";
+        }
+    }
   }
   //left hand
   else{
     std::cout << "Left hand moving ";
+    if (top){
+        std::cout << "to top ";
+        if (right){
+            std::cout << "right.";
+        }
+        else{
+            std::cout << "left.";
+            triggerKeyboard(0);
+        }
+    }
+    else{
+        std::cout << "to bottom ";
+        if (right){
+            std::cout << "right.";
+        }
+        else{
+            std::cout << "left.";
+        }
+    }
   }
-
-
-  if (top)
-  {
-    std::cout << "to top ";
-  }else std::cout << "to bottom ";
-  if (right)
-  {
-    std::cout << "right.";
-  }else std::cout << "left.";
   std::cout << std::endl;
 }
 
-void triggerKeyboard(){
+void triggerKeyboard(int idEvent){
 
     int fd = 0;
     char const *device = "/dev/input/event0"; // cat /proc/bus/input/devices
     if( (fd = open(device, O_RDWR)) > 0 )
     {
         struct input_event event;
+        if(idEvent == 0){
+            // Press a key (stuff the keyboard with a keypress)
+            event.type = EV_KEY;
+            event.value = EV_PRESSED;
+            event.code = KEY_LEFT;
+            
+            write(fd, &event, sizeof(struct input_event));
 
-        // Press a key (stuff the keyboard with a keypress)
-        event.type = EV_KEY;
-        event.value = EV_PRESSED;
-        event.code = KEY_B;
-        write(fd, &event, sizeof(struct input_event));
+            // Release the key
+            event.value = EV_RELEASED;
+            write(fd, &event, sizeof(struct input_event));
+        }
+        else if(idEvent == 1){
+            // Press a key (stuff the keyboard with a keypress)
+            event.type = EV_KEY;
+            event.value = EV_PRESSED;
+            event.code = KEY_RIGHT;
+            
+            write(fd, &event, sizeof(struct input_event));
 
-        // Release the key
-        event.value = EV_RELEASED;
-        event.code = KEY_B;
+            // Release the key
+            event.value = EV_RELEASED;
+            write(fd, &event, sizeof(struct input_event));
+        }
+
+        event.type = EV_SYN;
+        event.value = 0;
+        event.code = SYN_REPORT;
         write(fd, &event, sizeof(struct input_event));
         close(fd);
     }

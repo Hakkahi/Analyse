@@ -26,7 +26,7 @@ void backgroundSubtractor(Mat& frame, Mat& mogThreshold, Ptr<BackgroundSubtracto
 void triggerAction(int hand, bool top = false, bool right = false);
 void initutils(int v);
 Mat detectColor(int id, Mat& frame, Scalar lowerHSV, Scalar upperHSV, Scalar color, std::string message="");
-void triggerKeyboard();
+void triggerKeyboard(int idEvent);
 
 
 

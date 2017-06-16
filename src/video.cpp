@@ -12,7 +12,7 @@ using namespace std;
  int main( int argc, char** argv )
  {
  
-   VideoCapture vcap(0);
+   VideoCapture vcap(1);
  
       if(!vcap.isOpened()){
              cout << "Error opening video stream or file" << endl;
@@ -27,17 +27,17 @@ using namespace std;
  
   Mat frame;
 
-   for(int i = 0; i < 360; ++i)
+   for(int i = 0; i < 310; ++i)
    {
  
        vcap >> frame;
        video.write(frame);
    }
    
-    std::cout << " Vous pouvez y aller les lapins, YOLO " << vcap.get(CV_CAP_PROP_FPS) << std::endl;
+    std::cout << " Vous pouvez y aller" << std::endl;
  
  
-   for(int i = 0; i < 3000; ++i)
+   for(int i = 0; i < 1800; ++i)
     {
 
         vcap >> frame;

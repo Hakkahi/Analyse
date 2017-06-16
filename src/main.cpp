@@ -13,7 +13,8 @@ using namespace cv;
 
 int main(int argc, char ** argv){
 
-  VideoCapture cap(1);
+  //VideoCapture cap(1);
+  VideoCapture cap("Data/out.avi");
 
   double fps = cap.get(CV_CAP_PROP_FPS);
   int wait = 1000 / fps;
@@ -66,9 +67,9 @@ int main(int argc, char ** argv){
       if(std::get<3>(colorsToDetect[i]) != ids) idd++;
       colorFrame += detectColor(idd, frameWithoudFoground, std::get<0>(colorsToDetect[i]), std::get<1>(colorsToDetect[i]), std::get<2>(colorsToDetect[i]), std::get<3>(colorsToDetect[i]));
     }
-    //imshow("frame", frame);
+    imshow("frame", frame);
     imshow("frameWithoudFoground", frameWithoudFoground);
-    //imshow("mog2Frame", mogThreshold);
+    imshow("mog2Frame", mogThreshold);
     imshow("colorFrame", colorFrame);
 
     frameWithoudFoground = Mat();
